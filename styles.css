@@ -1,8 +1,21 @@
 
+body {
+    background-color: antiquewhite;
+    font-family: 'Courier New', Courier, monospace
+    /*font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;*/
+}
+
+select {
+    background-color: D7E6FA;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+}
 
 #intervals-display {
-    padding-top: 30px;  /* This adds space inside the interval display, pushing other elements away */
-    padding-bottom: 30px;  /* This adds space inside the interval display, pushing other elements away */
+    padding-top: 30px;  
+    padding-bottom: 30px;  
 }
 
 #fretboard {
@@ -99,7 +112,7 @@
 
   .row-label {
     display: inline-block;
-    width: 50px;
+    width: 130px;
   }
 
   .hidden {
