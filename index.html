@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Learn The Fretboard</title>
+    <title>Master The Fretboard</title>
     <link rel="stylesheet" href="styles.css"> <!--CSS styleing--> 
 </head>
 <body>
-    <h1>learn the fretboard [beta]</h1>
-    <h2>guitar neck visualization tool</h2>
+    <h1>master the fretboard [beta]</h1>
     
     <div>
         <label for="root-note">Root Note:</label>
@@ -21,7 +20,7 @@
 
     <div id="intervals-display">
         <div class="row">
-            <span class="row-label">Interval: </span>
+            <span class="row-label">Scale Degree: </span>
             <span id="interval-row"></span>
         </div>
         <div class="row">
@@ -34,6 +33,12 @@
     <div id="fret-numbers"> </div>
     <div id="fretboard"></div>
     <div id="fret-inlays"></div>
+
+    <div>
+        <label for="fret-label">Fret Label: </label>
+        <select id="fret-label"></select>
+    </div>
+    
     
     <script>
         // variables
@@ -55,6 +60,7 @@
         };
 
         const frets = 22; 
+        const fretLabels = ["Note", "Scale Degree"]
 
         // Populate the root note select element
         const rootNoteSelect = document.getElementById("root-note");
@@ -88,6 +94,16 @@
             scaleSelect.appendChild(option);
         }
 
+        // Populate the fret label  select element
+        const fretLabelSelect = document.getElementById("fret-label");
+
+        for (let label of fretLabels) {
+            let option = document.createElement("option");
+            option.value = label;
+            option.text = label;
+
+            fretLabelSelect.appendChild(option);
+        }
 
 
         // display the intervals and cooresponding notes 
@@ -97,10 +113,12 @@
         updateDisplay(); // to generate intervals, notes, and freboard upon page load
         rootNoteSelect.addEventListener('change', updateDisplay); // update if root note changed
         scaleSelect.addEventListener('change', updateDisplay); // update if scale changed
+        fretLabelSelect.addEventListener('change', updateDisplay); // update if scale changed
         
         function updateDisplay() {
             let selectedRoot = rootNoteSelect.value;
             let selectedScale = scaleSelect.value;
+            let selectedFretLabel = fretLabelSelect.value;
 
             // Update interval display
             generateIntervalNotes(selectedRoot, selectedScale);
@@ -110,7 +128,7 @@
             if (flatKeys.includes(selectedRoot)) {
                 noteArray = flatNotes;
             }
-            generateFretboard(selectedRoot, selectedScale);
+            generateFretboard(selectedRoot, selectedScale, selectedFretLabel);
         }
 
         // intervals and notes display (updated based on root note and scale)
@@ -147,12 +165,8 @@
             }
         }
 
-        function notesInScale(selectedRoot, selectedSale){
-
-        }
-
         // fretboard display (updated based on root note and scale)
-        function generateFretboard(selectedRoot, selectedScale) {
+        function generateFretboard(selectedRoot, selectedScale, selectedFretLabel) {
 
             const fretboard = document.getElementById("fretboard");
             fretboard.innerHTML = ''; // Clear the fretboard
@@ -176,42 +190,48 @@
                 openString.classList.add("open-string-border"); 
 
                 const openStringText = document.createElement("span");
-                openStringText.textContent = string; // set the text to dispaly for the open position (eg., "E", "A", ... "e")
-                openStringText.classList.add("open-string-text");
 
-                openString.appendChild(openStringText);
-
-                // If the interval is not in the selected scale, add the "hidden" class
                 let openStringIndex = noteArray.indexOf(string.toUpperCase());
                 let semitonesToRoot = (openStringIndex - rootIndex + noteArray.length) % noteArray.length;
 
+                if (selectedFretLabel === 'Note') {
+                    openStringText.textContent = string; 
+                } else {
+                    openStringText.textContent = intervals[semitonesToRoot]; 
+                }
+                
+                openStringText.classList.add("open-string-text");
+                openString.appendChild(openStringText);
+
+                // If the interval is not in the selected scale, add the "hidden" class
                 if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
                     openStringText.classList.add("hidden");
                 }
 
                 // add open-string element as child of stringDiv. 
                 stringDiv.appendChild(openString); 
-
-
                 
-                // add notes and frets for each string
+                // add labels and frets for each string
                 for (let i = 1; i < frets+1; i++) { 
                     
                     const fret = document.createElement("div");
                     fret.classList.add("fret");
 
-                    const note = document.createElement("span"); // create a new span for the note
-                    note.textContent = noteArray[(openStringIndex + i) % noteArray.length];
-
-                    // Calculate the interval of the current note relative to the root note
-                    let semitonesToRoot = (openStringIndex + i - rootIndex + noteArray.length) % noteArray.length;
+                    const fretText = document.createElement("span"); // create a new span for the note
+                    let semitonesToRoot = (openStringIndex + i - rootIndex + noteArray.length) % noteArray.length; // Calculate the interval of the current note relative to the root note
+                    
+                    if (selectedFretLabel === 'Note') {
+                        fretText.textContent = noteArray[(openStringIndex + i) % noteArray.length];
+                    } else {
+                        fretText.textContent = intervals[semitonesToRoot]; 
+                    }   
 
                     // If the current interval is not in the selected scale, hide the note
                     if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
-                        note.classList.add("hidden");
+                        fretText.classList.add("hidden");
                     }
 
-                    fret.appendChild(note); // append the note to the fret
+                    fret.appendChild(fretText); // append the note to the fret
 
 
                     const guitarString = document.createElement("div");
@@ -247,7 +267,6 @@
             fretInlay.classList.add("fret-inlay");
             fretInlaysDiv.appendChild(fretInlay);
         }
-
 
     </script>
 </body>
