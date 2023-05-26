@@ -39,6 +39,10 @@
         <select id="fret-label"></select>
     </div>
     
+    <div>
+        <label for="root-highlight">Root Note Highlight: </label>
+        <select id="root-highlight"></select>
+    </div>
     
     <script>
         // variables
@@ -61,6 +65,7 @@
 
         const frets = 22; 
         const fretLabels = ["Note", "Scale Degree"]
+        const rootHighlights = ["None", "Bold"]
 
         // Populate the root note select element
         const rootNoteSelect = document.getElementById("root-note");
@@ -105,33 +110,23 @@
             fretLabelSelect.appendChild(option);
         }
 
+        // Populate the root-highlight  select element
+        const rootHighlightSelect = document.getElementById("root-highlight");
+
+        for (let highlight of rootHighlights) {
+            let option = document.createElement("option");
+            option.value = highlight;
+            option.text = highlight;
+
+            rootHighlightSelect.appendChild(option);
+        }
+
 
         // display the intervals and cooresponding notes 
         const intervalRow = document.getElementById("interval-row");
         const noteRow = document.getElementById("note-row");
 
-        updateDisplay(); // to generate intervals, notes, and freboard upon page load
-        rootNoteSelect.addEventListener('change', updateDisplay); // update if root note changed
-        scaleSelect.addEventListener('change', updateDisplay); // update if scale changed
-        fretLabelSelect.addEventListener('change', updateDisplay); // update if scale changed
-        
-        function updateDisplay() {
-            let selectedRoot = rootNoteSelect.value;
-            let selectedScale = scaleSelect.value;
-            let selectedFretLabel = fretLabelSelect.value;
-
-            // Update interval display
-            generateIntervalNotes(selectedRoot, selectedScale);
-
-            // Update fretboard
-            let noteArray = sharpNotes;
-            if (flatKeys.includes(selectedRoot)) {
-                noteArray = flatNotes;
-            }
-            generateFretboard(selectedRoot, selectedScale, selectedFretLabel);
-        }
-
-        // intervals and notes display (updated based on root note and scale)
+        // intervals and notes display
         function generateIntervalNotes(selectedRoot, selectedScale) {
             
             let noteArray = sharpNotes;
@@ -140,7 +135,6 @@
             }
 
             let startNoteIndex = noteArray.indexOf(selectedRoot);
-
             let scaleDegrees = scaleIntervals[selectedScale]; // Get the intervals for the selected scale
 
             intervalRow.innerHTML = '';  // Clear without affecting label
@@ -165,7 +159,7 @@
             }
         }
 
-        // fretboard display (updated based on root note and scale)
+        // fretboard display
         function generateFretboard(selectedRoot, selectedScale, selectedFretLabel) {
 
             const fretboard = document.getElementById("fretboard");
@@ -207,6 +201,10 @@
                 if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
                     openStringText.classList.add("hidden");
                 }
+                
+                if (semitonesToRoot === 0) {
+                    openStringText.classList.add("highlight");
+                }
 
                 // add open-string element as child of stringDiv. 
                 stringDiv.appendChild(openString); 
@@ -231,6 +229,11 @@
                         fretText.classList.add("hidden");
                     }
 
+                    // bold root note
+                    if (semitonesToRoot === 0) {
+                        fretText.classList.add("highlight");
+                    }
+
                     fret.appendChild(fretText); // append the note to the fret
 
 
@@ -246,18 +249,21 @@
         }
 
 
-        // Generate fret numbers
+        // Generate fret numbers and inlays
         const fretNumbersDiv = document.getElementById("fret-numbers");
-        for (let i = 1; i < frets+1; i++) {
+        const fretInlaysDiv = document.getElementById("fret-inlays");
+
+        for (let i = 0; i < frets+1; i++) {
+            // fret numbers
             const fretNumber = document.createElement("span");
             fretNumber.textContent = i;
             fretNumber.classList.add("fret-number");
+            if(i === 0 ) {
+                fretNumber.classList.add("hidden");
+            }
             fretNumbersDiv.appendChild(fretNumber);
-        }
 
-        // Generate fret inlays
-        const fretInlaysDiv = document.getElementById("fret-inlays");
-        for (let i = 0; i < frets+1; i++) {
+            // fret inlays
             const fretInlay = document.createElement("span");
             if (i === 12) {
                 fretInlay.textContent = '• •';
@@ -268,6 +274,26 @@
             fretInlaysDiv.appendChild(fretInlay);
         }
 
+        updateDisplay(); // to generate intervals, notes, and freboard upon page load
+        rootNoteSelect.addEventListener('change', updateDisplay); // update if root note changed
+        scaleSelect.addEventListener('change', updateDisplay); // update if scale changed
+        fretLabelSelect.addEventListener('change', updateDisplay); // update if scale changed
+        
+        function updateDisplay() {
+            let selectedRoot = rootNoteSelect.value;
+            let selectedScale = scaleSelect.value;
+            let selectedFretLabel = fretLabelSelect.value;
+
+            // Update interval display
+            generateIntervalNotes(selectedRoot, selectedScale);
+
+            // Update fretboard
+            let noteArray = sharpNotes;
+            if (flatKeys.includes(selectedRoot)) {
+                noteArray = flatNotes;
+            }
+            generateFretboard(selectedRoot, selectedScale, selectedFretLabel);
+        }
     </script>
 </body>
 </html>
