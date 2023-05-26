@@ -14,9 +14,34 @@ select {
 }
 
 #intervals-display {
-    padding-top: 30px;  
-    padding-bottom: 30px;  
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;  
+  padding-bottom: 30px;  
 }
+
+#interval-row, #note-row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.interval, .note {
+  /*display: inline-block;*/
+  /*display: flex;*/
+  width: 40px;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+}
+
+.row-label {
+  /*display: inline-block;*/
+  width: 130px;
+  flex-shrink: 0;
+}
+
 
 #fretboard {
     display: flex;
@@ -43,7 +68,7 @@ select {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-left: 43px; /* .open-string width + boarder-right */
+    /*padding-left: 43px;  .open-string width + boarder-right */
     margin-bottom: 5px;
   }
   
@@ -55,15 +80,21 @@ select {
     font-size: 10px;
   }  
 
+  #fret-inlays {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
   .fret-inlay {
-    display: inline-block;
     width: 42px; /* .fret width + boarder-right */
-    /*height: 5px;*/
-    text-align: center;
-    /*line-height: 5px;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 12px;
-    color: #666;
-}
+  }  
+
 
   .string {
     display: flex;
@@ -104,17 +135,10 @@ select {
 }
 
 
-  .interval, .note {
-    display: inline-block;
-    width: 40px;
-    text-align: center;
-  }
+.hidden {
+  visibility: hidden;
+}
 
-  .row-label {
-    display: inline-block;
-    width: 130px;
-  }
-
-  .hidden {
-    visibility: hidden;
+.highlight {
+  font-weight: bold;
 }
