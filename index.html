@@ -160,7 +160,7 @@
         }
 
         // fretboard display
-        function generateFretboard(selectedRoot, selectedScale, selectedFretLabel) {
+        function generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight) {
 
             const fretboard = document.getElementById("fretboard");
             fretboard.innerHTML = ''; // Clear the fretboard
@@ -202,8 +202,11 @@
                     openStringText.classList.add("hidden");
                 }
                 
-                if (semitonesToRoot === 0) {
-                    openStringText.classList.add("highlight");
+                // highlight root notes if selected
+                if (selectedHighlight === 'Bold') {
+                    if (semitonesToRoot === 0) {
+                        openStringText.classList.add("highlight");
+                    }
                 }
 
                 // add open-string element as child of stringDiv. 
@@ -229,9 +232,11 @@
                         fretText.classList.add("hidden");
                     }
 
-                    // bold root note
-                    if (semitonesToRoot === 0) {
-                        fretText.classList.add("highlight");
+                    // highlight root notes if selected
+                    if (selectedHighlight === 'Bold') {
+                        if (semitonesToRoot === 0) {
+                            fretText.classList.add("highlight");
+                        }
                     }
 
                     fret.appendChild(fretText); // append the note to the fret
@@ -274,15 +279,19 @@
             fretInlaysDiv.appendChild(fretInlay);
         }
 
-        updateDisplay(); // to generate intervals, notes, and freboard upon page load
-        rootNoteSelect.addEventListener('change', updateDisplay); // update if root note changed
-        scaleSelect.addEventListener('change', updateDisplay); // update if scale changed
-        fretLabelSelect.addEventListener('change', updateDisplay); // update if scale changed
+        // generate intervals, notes, and freboard upon page load
+        updateDisplay(); 
+        // update display if any user inputs chnage
+        rootNoteSelect.addEventListener('change', updateDisplay); 
+        scaleSelect.addEventListener('change', updateDisplay); 
+        fretLabelSelect.addEventListener('change', updateDisplay); 
+        rootHighlightSelect.addEventListener('change', updateDisplay); 
         
         function updateDisplay() {
             let selectedRoot = rootNoteSelect.value;
             let selectedScale = scaleSelect.value;
             let selectedFretLabel = fretLabelSelect.value;
+            let selectedHighlight = rootHighlightSelect.value;
 
             // Update interval display
             generateIntervalNotes(selectedRoot, selectedScale);
@@ -292,7 +301,7 @@
             if (flatKeys.includes(selectedRoot)) {
                 noteArray = flatNotes;
             }
-            generateFretboard(selectedRoot, selectedScale, selectedFretLabel);
+            generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight);
         }
     </script>
 </body>
