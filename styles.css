@@ -61,7 +61,7 @@ select {
   .fret span { /* add styles for the note text */
     position: relative; /* make it appear above the guitar string */
     z-index: 1; /* make it appear above the guitar string */
-    font-size: 12px;
+    font-size: 13px;
   }
 
   #fret-numbers {
@@ -85,6 +85,7 @@ select {
     justify-content: flex-start;
     align-items: center;
     margin-bottom: 5px;
+    padding-bottom: 20px;
   }
   
   .fret-inlay {
@@ -131,14 +132,26 @@ select {
 }
 
 .open-string-text {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 
+/*
 .hidden {
   visibility: hidden;
 }
+*/
 
-.highlight {
-  font-weight: bold;
+.highlight-bold {
+  font-weight: bolder;
+}
+
+.highlight-circle {
+  background-color: #ff0; /* or any color you want */
+  border-radius: 50%; /* makes the background circular */
+  padding: 5px; /* add some space around the text */
+  /* ensure the text is centered in the circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
