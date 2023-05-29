@@ -43,6 +43,11 @@
         <label for="root-highlight">Root Note Highlight: </label>
         <select id="root-highlight"></select>
     </div>
+
+    <div>
+        <label for="CAGED-highlight">CAGED Highlight: </label>
+        <select id="CAGED-highlight"></select>
+    </div>
     
     <script>
         // variables
@@ -68,6 +73,7 @@
         const frets = 22; 
         const fretLabels = ["Note", "Scale Degree"]
         const rootHighlights = ["None", "Bold"]
+        const CAGEDHighlights = ["None", "All", "C", "A", "G", "E", "D"]
 
         // Populate the root note select element
         const rootNoteSelect = document.getElementById("root-note");
@@ -123,6 +129,16 @@
             rootHighlightSelect.appendChild(option);
         }
 
+        // Populate the CAGED-highlight  select element
+        const CAGEDHighlightSelect = document.getElementById("CAGED-highlight");
+
+        for (let highlight of CAGEDHighlights) {
+            let option = document.createElement("option");
+            option.value = highlight;
+            option.text = highlight;
+
+            CAGEDHighlightSelect.appendChild(option);
+        }
 
         // display the intervals and cooresponding notes 
         const intervalRow = document.getElementById("interval-row");
@@ -153,7 +169,8 @@
 
                 // If the current interval is not in the selected scale, hide the note
                 if (!scaleDegrees.includes(intervals[i])) {
-                    note.classList.add("hidden");
+                    //note.classList.add("hidden");
+                    note.textContent = " ";
                 }
 
                 intervalRow.appendChild(interval);  // Append to the interval row
@@ -162,7 +179,7 @@
         }
 
         // fretboard display
-        function generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight) {
+        function generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight, selectedCAGED) {
 
             const fretboard = document.getElementById("fretboard");
             fretboard.innerHTML = ''; // Clear the fretboard
@@ -201,13 +218,14 @@
 
                 // If the interval is not in the selected scale, add the "hidden" class
                 if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
-                    openStringText.classList.add("hidden");
+                    //openStringText.classList.add("hidden");
+                    openStringText.textContent = " ";
                 }
                 
                 // highlight root notes if selected
                 if (selectedHighlight === 'Bold') {
                     if (semitonesToRoot === 0) {
-                        openStringText.classList.add("highlight");
+                        openStringText.classList.add("highlight-bold");
                     }
                 }
 
@@ -231,16 +249,67 @@
 
                     // If the current interval is not in the selected scale, hide the note
                     if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
-                        fretText.classList.add("hidden");
+                        //fretText.classList.add("hidden");
+                        fretText.textContent = " ";
                     }
 
                     // highlight root notes if selected
                     if (selectedHighlight === 'Bold') {
                         if (semitonesToRoot === 0) {
-                            fretText.classList.add("highlight");
+                            fretText.classList.add("highlight-bold");
                         }
                     }
 
+                    // CAGED highlighs 
+                    // C shape
+                    if (selectedCAGED === 'C' || selectedCAGED === 'All') {
+                        if ((semitonesToRoot === 0 && (string === 'A'||string === 'B')) ||
+                            (semitonesToRoot === 4 && (string === 'D'||string === 'e')) ||
+                            (semitonesToRoot === 7 && (string === 'G'))) 
+                             {
+                                fretText.classList.add("highlight-circle");
+                        }
+                    }
+
+                    // A shape
+                    if (selectedCAGED === 'A' || selectedCAGED === 'All') {
+                        if ((semitonesToRoot === 0 && (string === 'A'||string === 'G')) ||
+                            (semitonesToRoot === 4 && (string === 'B')) ||
+                            (semitonesToRoot === 7 && (string === 'D'||string === 'e'))) 
+                             {
+                                fretText.classList.add("highlight-circle");
+                        }
+                    }
+
+                    // G shape
+                    if (selectedCAGED === 'G' || selectedCAGED === 'All') {
+                        if ((semitonesToRoot === 0 && (string === 'E'||string === 'G'||string === 'e')) ||
+                            (semitonesToRoot === 4 && (string === 'A'||string === 'B')) ||
+                            (semitonesToRoot === 7 && (string === 'D'))) 
+                             {
+                                fretText.classList.add("highlight-circle");
+                        }
+                    }
+
+                    // E shape
+                    if (selectedCAGED === 'E' || selectedCAGED === 'All') {
+                        if ((semitonesToRoot === 0 && (string === 'E'||string === 'D'||string === 'e')) ||
+                            (semitonesToRoot === 4 && (string === 'G')) ||
+                            (semitonesToRoot === 7 && (string === 'A'||string === 'B'))) 
+                             {
+                                fretText.classList.add("highlight-circle");
+                        }
+                    }
+
+                    // D shape
+                    if (selectedCAGED === 'D' || selectedCAGED === 'All') {
+                        if ((semitonesToRoot === 0 && (string === 'D'||string === 'B')) ||
+                            (semitonesToRoot === 4 && (string === 'e')) ||
+                            (semitonesToRoot === 7 && (string === 'G'))) 
+                             {
+                                fretText.classList.add("highlight-circle");
+                        }
+                    }
                     fret.appendChild(fretText); // append the note to the fret
 
 
@@ -288,22 +357,20 @@
         scaleSelect.addEventListener('change', updateDisplay); 
         fretLabelSelect.addEventListener('change', updateDisplay); 
         rootHighlightSelect.addEventListener('change', updateDisplay); 
+        CAGEDHighlightSelect.addEventListener('change', updateDisplay); 
         
         function updateDisplay() {
             let selectedRoot = rootNoteSelect.value;
             let selectedScale = scaleSelect.value;
             let selectedFretLabel = fretLabelSelect.value;
             let selectedHighlight = rootHighlightSelect.value;
+            let selectedCAGED = CAGEDHighlightSelect.value;
 
             // Update interval display
             generateIntervalNotes(selectedRoot, selectedScale);
 
             // Update fretboard
-            let noteArray = sharpNotes;
-            if (flatKeys.includes(selectedRoot)) {
-                noteArray = flatNotes;
-            }
-            generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight);
+            generateFretboard(selectedRoot, selectedScale, selectedFretLabel, selectedHighlight, selectedCAGED);
         }
     </script>
 </body>
