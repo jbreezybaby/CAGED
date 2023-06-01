@@ -47,9 +47,9 @@ select {
     display: flex;
     flex-direction: column;
   }
-  
-  .fret {
-    position: relative; /* allows us to position children elements */
+
+  .fret { /* style the divs acting as the frets */
+    position: relative; 
     width: 40px;
     height: 20px;
     display: flex;
@@ -57,45 +57,17 @@ select {
     justify-content: center;
     border-right: 2px solid rgba(0, 0, 0, 0.5);
   }
-  
-  .fret span { /* add styles for the note text */
-    position: relative; /* make it appear above the guitar string */
-    z-index: 1; /* make it appear above the guitar string */
-    font-size: 13px;
-  }
 
-  #fret-numbers {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    /*padding-left: 43px;  .open-string width + boarder-right */
-    margin-bottom: 5px;
+  .fret span { /* style the span elements inside hte frets. This is the text itself */
+    position: relative; 
+    z-index: 1; 
+    font-size: 14px;
   }
   
-  .fret-number {
-    width: 42px; /* .fret width + boarder-right */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 10px;
-  }  
-
-  #fret-inlays {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 5px;
-    padding-bottom: 20px;
-  }
+  .open-string-border {
+    border-right: 3px solid rgba(0, 0, 0, 0.5);
+}
   
-  .fret-inlay {
-    width: 42px; /* .fret width + boarder-right */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-  }  
-
 
   .string {
     display: flex;
@@ -111,30 +83,38 @@ select {
   }
   
 
-  .open-string {
-    /*border: none;*/
-    border-right: 3px solid rgba(0, 0, 0, 0.5);
-    width: 40px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-  }
 
-  .open-string-border {
-    border-right: 3px solid rgba(0, 0, 0, 0.5);
-    width: 40px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+#fret-numbers {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /*padding-left: 43px;  .open-string width + boarder-right */
+  margin-bottom: 5px;
 }
 
-.open-string-text {
-    font-size: 13px;
+.fret-number {
+  width: 42px; /* .fret width + boarder-right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}  
+
+#fret-inlays {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 5px;
+  padding-bottom: 20px;
 }
 
+.fret-inlay {
+  width: 42px; /* .fret width + boarder-right */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}  
 
 /*
 .hidden {
