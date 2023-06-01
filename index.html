@@ -75,6 +75,13 @@
         const rootHighlights = ["None", "Bold"]
         const CAGEDHighlights = ["None", "All", "C", "A", "G", "E", "D"]
 
+        let fretSize = [];  // Initialize an empty array
+
+        for(let i = 0; i < frets+1; i++) { // This loop will run 10 times
+            fretSize.push(50-i); // Add the current value of i to the array
+        }
+
+
         // Populate the root note select element
         const rootNoteSelect = document.getElementById("root-note");
 
@@ -207,6 +214,7 @@
                     if (i === 0){
                         fret.classList.add("open-string-border"); 
                     }
+                    fret.style.width = `${fretSize[i]}px`;
 
                     const fretText = document.createElement("span"); // create a new span for the note
                     let openStringIndex = noteArray.indexOf(string.toUpperCase());
@@ -312,8 +320,9 @@
             fretNumber.textContent = i;
             fretNumber.classList.add("fret-number");
             if(i === 0 ) {
-                fretNumber.classList.add("hidden");
+                fretNumber.textContent = " ";
             }
+            fretNumber.style.width = `${fretSize[i]+2}px`; // add 2px to account for fret border width
             fretNumbersDiv.appendChild(fretNumber);
 
             // fret inlays
@@ -324,6 +333,7 @@
                 fretInlay.textContent = '•';
             }
             fretInlay.classList.add("fret-inlay");
+            fretInlay.style.width = `${fretSize[i]+2}px`; // add 2px to account for fret border width
             fretInlaysDiv.appendChild(fretInlay);
         }
 
