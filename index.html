@@ -197,52 +197,27 @@
                 // create string div and add css
                 const stringDiv = document.createElement("div"); 
                 stringDiv.classList.add("string"); 
-                
-                // open strings
-                const openString = document.createElement("span");
-                openString.classList.add("open-string-border"); 
-
-                const openStringText = document.createElement("span");
-
-                let openStringIndex = noteArray.indexOf(string.toUpperCase());
-                let semitonesToRoot = (openStringIndex - rootIndex + noteArray.length) % noteArray.length;
-
-                if (selectedFretLabel === 'Note') {
-                    openStringText.textContent = string; 
-                } else {
-                    openStringText.textContent = intervals[semitonesToRoot]; 
-                }
-                
-                openStringText.classList.add("open-string-text");
-                openString.appendChild(openStringText);
-
-                // If the interval is not in the selected scale, add the "hidden" class
-                if (!scaleDegrees.includes(intervals[semitonesToRoot])) {
-                    //openStringText.classList.add("hidden");
-                    openStringText.textContent = " ";
-                }
-                
-                // highlight root notes if selected
-                if (selectedHighlight === 'Bold') {
-                    if (semitonesToRoot === 0) {
-                        openStringText.classList.add("highlight-bold");
-                    }
-                }
-
-                // add open-string element as child of stringDiv. 
-                stringDiv.appendChild(openString); 
+   
                 
                 // add labels and frets for each string
-                for (let i = 1; i < frets+1; i++) { 
+                for (let i = 0; i < frets+1; i++) { 
                     
                     const fret = document.createElement("div");
                     fret.classList.add("fret");
+                    if (i === 0){
+                        fret.classList.add("open-string-border"); 
+                    }
 
                     const fretText = document.createElement("span"); // create a new span for the note
+                    let openStringIndex = noteArray.indexOf(string.toUpperCase());
                     let semitonesToRoot = (openStringIndex + i - rootIndex + noteArray.length) % noteArray.length; // Calculate the interval of the current note relative to the root note
                     
                     if (selectedFretLabel === 'Note') {
-                        fretText.textContent = noteArray[(openStringIndex + i) % noteArray.length];
+                        if (string === "e" && i === 0) {
+                            fretText.textContent = string; 
+                        } else {
+                            fretText.textContent = noteArray[(openStringIndex + i) % noteArray.length];
+                        }
                     } else {
                         fretText.textContent = intervals[semitonesToRoot]; 
                     }   
@@ -312,10 +287,12 @@
                     }
                     fret.appendChild(fretText); // append the note to the fret
 
-
-                    const guitarString = document.createElement("div");
-                    guitarString.classList.add("guitar-string");
-                    fret.appendChild(guitarString); // append the guitar string to the fret
+                    // add guitar string visual over fret
+                    if (i !== 0){
+                        const guitarString = document.createElement("div");
+                        guitarString.classList.add("guitar-string");
+                        fret.appendChild(guitarString); 
+                    }
 
                     stringDiv.appendChild(fret);
                 }
