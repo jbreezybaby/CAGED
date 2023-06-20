@@ -49,10 +49,13 @@
         <select id="CAGED-highlight"></select>
     </div>
     
+    <script src="app.js"></script>
     <script>
         // variables
         const rootNotes = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"];
         const flatKeys = ["F", "Bb", "Eb", "Ab", "Db", "Gb"];
+        const flatMajKeys = ["F", "Bb", "Eb", "Ab", "Db", "Gb"];
+        const flatMinKeys = ["D", "G", "C", "F", "Bb", "Eb"];
         
         const sharpNotes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"];
         const flatNotes = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"];
@@ -70,15 +73,15 @@
             // ...
         };
 
-        const frets = 22; 
+        const number_of_frets = 22; 
         const fretLabels = ["Note", "Scale Degree"]
         const rootHighlights = ["None", "Bold"]
         const CAGEDHighlights = ["None", "All", "C", "A", "G", "E", "D"]
 
-        let fretSize = [];  // Initialize an empty array
+        let fretSize = [];
 
-        for(let i = 0; i < frets+1; i++) { // This loop will run 10 times
-            fretSize.push(50-i); // Add the current value of i to the array
+        for(let i = 0; i < number_of_frets+1; i++) { 
+            fretSize.push(50-i); 
         }
 
 
@@ -154,13 +157,14 @@
         // intervals and notes display
         function generateIntervalNotes(selectedRoot, selectedScale) {
             
-            let noteArray = sharpNotes;
-            if (flatKeys.includes(selectedRoot)) {
-                noteArray = flatNotes;
-            }
+            let noteArray = getNoteArray(selectedRoot, selectedScale)
 
             let startNoteIndex = noteArray.indexOf(selectedRoot);
             let scaleDegrees = scaleIntervals[selectedScale]; // Get the intervals for the selected scale
+
+            console.log(startNoteIndex);
+            console.log(scaleDegrees);
+            console.log(noteArray);
 
             intervalRow.innerHTML = '';  // Clear without affecting label
             noteRow.innerHTML = '';  // Clear without affecting label
@@ -191,10 +195,10 @@
             const fretboard = document.getElementById("fretboard");
             fretboard.innerHTML = ''; // Clear the fretboard
             const strings = ["e", "B", "G", "D", "A", "E"];
-            let noteArray = sharpNotes;
-            if (flatKeys.includes(selectedRoot)) {
-                noteArray = flatNotes;
-            }
+            
+            let noteArray = getNoteArray(selectedRoot, selectedScale)
+            
+
             let scaleDegrees = scaleIntervals[selectedScale]; // Get the intervals for the selected scale
             let rootIndex = noteArray.indexOf(selectedRoot);
 
@@ -207,7 +211,7 @@
    
                 
                 // add labels and frets for each string
-                for (let i = 0; i < frets+1; i++) { 
+                for (let i = 0; i < number_of_frets+1; i++) { 
                     
                     const fret = document.createElement("div");
                     fret.classList.add("fret");
@@ -314,7 +318,7 @@
         const fretNumbersDiv = document.getElementById("fret-numbers");
         const fretInlaysDiv = document.getElementById("fret-inlays");
 
-        for (let i = 0; i < frets+1; i++) {
+        for (let i = 0; i < number_of_frets+1; i++) {
             // fret numbers
             const fretNumber = document.createElement("span");
             fretNumber.textContent = i;
